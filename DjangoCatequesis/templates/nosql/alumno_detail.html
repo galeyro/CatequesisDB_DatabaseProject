@@ -1,0 +1,143 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+    <div class="bg-white shadow overflow-hidden sm:rounded-lg">
+        <div class="px-4 py-5 sm:px-6 flex justify-between items-center">
+            <div>
+                <h3 class="text-lg leading-6 font-medium text-gray-900">
+                    Detalle del Alumno (NoSQL)
+                </h3>
+                <p class="mt-1 max-w-2xl text-sm text-gray-500">
+                    Información completa del documento MongoDB.
+                </p>
+            </div>
+            <div class="flex space-x-3">
+                <a href="{% url 'nosql_alumno_edit' alumno.id %}"
+                    class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50">
+                    Editar
+                </a>
+                <a href="{% url 'nosql_alumno_list' %}"
+                    class="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700">
+                    Volver
+                </a>
+            </div>
+        </div>
+
+        <div class="border-t border-gray-200">
+            <dl>
+                <!-- Sección: Datos Personales -->
+                <div class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                    <dt class="text-sm font-medium text-gray-500">Nombre Completo</dt>
+                    <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{ alumno.datosPersonales.nombre }} {{ alumno.datosPersonales.apellido }}</dd>
+                </div>
+                <div class="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                    <dt class="text-sm font-medium text-gray-500">ID (MongoDB / SQL)</dt>
+                    <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                        <span class="font-mono text-xs bg-gray-100 px-2 py-1 rounded">{{ alumno.id }}</span>
+                        {% if alumno.idSql %} / SQL ID: {{ alumno.idSql }}{% endif %}
+                    </dd>
+                </div>
+                <div class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                    <dt class="text-sm font-medium text-gray-500">Estado de Inscripción</dt>
+                    <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                        {% if alumno.esInscripcionActiva %}
+                        <span
+                            class="inline-flex px-2 text-xs font-semibold leading-5 text-green-800 bg-green-100 rounded-full">Activa</span>
+                        {% else %}
+                        <span
+                            class="inline-flex px-2 text-xs font-semibold leading-5 text-red-800 bg-red-100 rounded-full">Inactiva</span>
+                        {% endif %}
+                    </dd>
+                </div>
+                <div class="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                    <dt class="text-sm font-medium text-gray-500">Fecha de Nacimiento</dt>
+                    <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                        {{ alumno.datosPersonales.fechaNacimiento|date:"d M Y" }}
+                        {% if alumno.datosPersonales.lugarNacimiento %}
+                        <span class="text-gray-500">({{ alumno.datosPersonales.lugarNacimiento }})</span>
+                        {% endif %}
+                    </dd>
+                </div>
+                <div class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                    <dt class="text-sm font-medium text-gray-500">Contacto</dt>
+                    <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                        {% if alumno.datosPersonales.direccion %}
+                        <p><strong>Dirección:</strong> {{ alumno.datosPersonales.direccion }}</p>
+                        {% endif %}
+                        {% if alumno.datosPersonales.telefono %}
+                        <p><strong>Teléfono:</strong> {{ alumno.datosPersonales.telefono }}</p>
+                        {% endif %}
+                    </dd>
+                </div>
+                <div class="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                    <dt class="text-sm font-medium text-gray-500">Información Escolar</dt>
+                    <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                        {{ alumno.datosPersonales.infoEscolar|default:"-" }}
+                    </dd>
+                </div>
+                <div class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                    <dt class="text-sm font-medium text-gray-500">Salud / Alergias</dt>
+                    <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2 text-red-600 font-medium">
+                        {{ alumno.datosPersonales.infoSalud|default:"Ninguna" }}
+                    </dd>
+                </div>
+
+                <!-- Sección: Representantes -->
+                <div class="bg-white px-4 py-5 sm:px-6 border-t border-gray-200">
+                    <h4 class="text-lg leading-6 font-medium text-gray-900 mb-4">Representantes</h4>
+                    {% if alumno.representantes %}
+                    <ul role="list" class="divide-y divide-gray-200">
+                        {% for rep in alumno.representantes %}
+                        <li class="py-4 flex">
+                            <div class="ml-3">
+                                <p class="text-sm font-medium text-gray-900">{{ rep.nombre }} {{ rep.apellido }}</p>
+                                <p class="text-sm text-gray-500">{{ rep.ocupacion }} - {{ rep.telefono }}</p>
+                                <p class="text-sm text-gray-500">{{ rep.email }}</p>
+                            </div>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                    {% else %}
+                    <p class="text-sm text-gray-500 italic">No hay representantes registrados.</p>
+                    {% endif %}
+                </div>
+
+                <!-- Sección: Historial de Sacramentos -->
+                <div class="bg-gray-50 px-4 py-5 sm:px-6 border-t border-gray-200">
+                    <h4 class="text-lg leading-6 font-medium text-gray-900 mb-4">Historial de Sacramentos</h4>
+                    {% if alumno.historialSacramentos %}
+                    <ul role="list" class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                        {% for sac in alumno.historialSacramentos %}
+                        <li class="col-span-1 bg-white rounded-lg shadow divide-y divide-gray-200">
+                            <div class="w-full h-full flex flex-col p-6">
+                                <div class="flex-1">
+                                    <div class="flex items-center space-x-3">
+                                        <h3 class="text-gray-900 text-sm font-medium truncate">{{ sac.nombreSacramento }}</h3>
+                                        <span
+                                            class="flex-shrink-0 inline-block px-2 py-0.5 text-green-800 text-xs font-medium bg-green-100 rounded-full">Realizado</span>
+                                    </div>
+                                    <p class="mt-1 text-gray-500 text-sm truncate">Fecha: {{ sac.fechaRealizacion|date:"d M Y" }}</p>
+                                    <p class="mt-1 text-gray-500 text-sm truncate">Lugar: {{ sac.lugar }}</p>
+                                    {% if sac.documentos %}
+                                    <div class="mt-4 pt-4 border-t border-gray-100">
+                                        <p class="text-xs text-gray-400 uppercase tracking-wide font-bold">Documento Soporte</p>
+                                        <p class="text-sm text-gray-600">ID: {{ sac.documentos.id }}</p>
+                                        <p class="text-sm text-gray-600">Emitido por: {{ sac.documentos.emitidoPor }}</p>
+                                    </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                    {% else %}
+                    <p class="text-sm text-gray-500 italic">No hay historial de sacramentos.</p>
+                    {% endif %}
+                </div>
+
+            </dl>
+        </div>
+    </div>
+</div>
+{% endblock %}

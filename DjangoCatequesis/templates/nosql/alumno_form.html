@@ -1,0 +1,348 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<!-- v2.0 fixed: Removed problematic default filters -->
+<div class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+    <div class="md:grid md:grid-cols-3 md:gap-6">
+        <div class="md:col-span-1">
+            <div class="px-4 sm:px-0">
+                <h3 class="text-lg font-medium leading-6 text-gray-900">Datos del Alumno (NoSQL)</h3>
+                <p class="mt-1 text-sm text-gray-600">
+                    Edición completa del documento MongoDB, incluyendo sub-documentos y arrays.
+                </p>
+
+                <!-- Tab Navigation (Vertical on desktop) -->
+                <nav class="mt-8 space-y-1" aria-label="Sidebar">
+                    <button type="button" onclick="switchTab('datos')" id="tab-btn-datos"
+                        class="tab-btn bg-gray-100 text-gray-900 group flex items-center px-3 py-2 text-sm font-medium rounded-md w-full">
+                        <span class="truncate">Datos Personales</span>
+                    </button>
+
+                    <button type="button" onclick="switchTab('representantes')" id="tab-btn-representantes"
+                        class="tab-btn text-gray-600 hover:bg-gray-50 hover:text-gray-900 group flex items-center px-3 py-2 text-sm font-medium rounded-md w-full">
+                        <span class="truncate">Representantes</span>
+                        <span id="badge-representantes"
+                            class="ml-auto inline-block py-0.5 px-3 text-xs font-medium rounded-full bg-gray-100 text-gray-600">
+                            {{ alumno.representantes|length }}
+                        </span>
+                    </button>
+
+                    <button type="button" onclick="switchTab('sacramentos')" id="tab-btn-sacramentos"
+                        class="tab-btn text-gray-600 hover:bg-gray-50 hover:text-gray-900 group flex items-center px-3 py-2 text-sm font-medium rounded-md w-full">
+                        <span class="truncate">Sacramentos</span>
+                        <span id="badge-sacramentos"
+                            class="ml-auto inline-block py-0.5 px-3 text-xs font-medium rounded-full bg-gray-100 text-gray-600">
+                            {{ alumno.historialSacramentos|length }}
+                        </span>
+                    </button>
+                </nav>
+            </div>
+        </div>
+
+        <div class="mt-5 md:mt-0 md:col-span-2">
+            <form action="" method="POST" id="main-form">
+                {% csrf_token %}
+                <div class="shadow sm:rounded-md sm:overflow-hidden bg-white">
+
+                    <!-- TAB CONTENT: DATOS PERSONALES -->
+                    <div id="tab-content-datos" class="tab-content px-4 py-5 bg-white space-y-6 sm:p-6">
+                        <h4 class="text-lg font-medium text-gray-900 mb-4 border-b pb-2">Información Básica</h4>
+                        <div class="grid grid-cols-6 gap-6">
+                            <div class="col-span-6 sm:col-span-3">
+                                <label for="nombre" class="block text-sm font-medium text-gray-700">Nombre</label>
+                                <input type="text" name="nombre" id="nombre" value="{{ alumno.datosPersonales.nombre }}"
+                                    required
+                                    class="mt-1 focus:ring-green-500 focus:border-green-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                            </div>
+
+                            <div class="col-span-6 sm:col-span-3">
+                                <label for="apellido" class="block text-sm font-medium text-gray-700">Apellido</label>
+                                <input type="text" name="apellido" id="apellido"
+                                    value="{{ alumno.datosPersonales.apellido }}" required
+                                    class="mt-1 focus:ring-green-500 focus:border-green-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                            </div>
+
+                            <div class="col-span-6 sm:col-span-3">
+                                <label for="fechaNacimiento" class="block text-sm font-medium text-gray-700">Fecha de
+                                    Nacimiento</label>
+                                <input type="date" name="fechaNacimiento" id="fechaNacimiento"
+                                    value="{{ alumno.fechaNacimiento_fmt }}"
+                                    class="mt-1 focus:ring-green-500 focus:border-green-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                            </div>
+
+                            <div class="col-span-6 sm:col-span-3">
+                                <label for="lugarNacimiento" class="block text-sm font-medium text-gray-700">Lugar de
+                                    Nacimiento</label>
+                                <input type="text" name="lugarNacimiento" id="lugarNacimiento"
+                                    value="{{ alumno.datosPersonales.lugarNacimiento }}"
+                                    class="mt-1 focus:ring-green-500 focus:border-green-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                            </div>
+
+                            <div class="col-span-6">
+                                <label for="direccion" class="block text-sm font-medium text-gray-700">Dirección</label>
+                                <input type="text" name="direccion" id="direccion"
+                                    value="{{ alumno.datosPersonales.direccion }}"
+                                    class="mt-1 focus:ring-green-500 focus:border-green-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                            </div>
+
+                            <div class="col-span-6 sm:col-span-3">
+                                <label for="telefono" class="block text-sm font-medium text-gray-700">Teléfono</label>
+                                <input type="text" name="telefono" id="telefono"
+                                    value="{{ alumno.datosPersonales.telefono }}"
+                                    class="mt-1 focus:ring-green-500 focus:border-green-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                            </div>
+
+                            <div class="col-span-6">
+                                <label for="infoSalud" class="block text-sm font-medium text-gray-700">Información de
+                                    Salud / Alergias</label>
+                                <textarea id="infoSalud" name="infoSalud" rows="2"
+                                    class="mt-1 shadow-sm focus:ring-green-500 focus:border-green-500 block w-full sm:text-sm border border-gray-300 rounded-md">{{ alumno.datosPersonales.infoSalud }}</textarea>
+                            </div>
+
+                            <div class="col-span-6">
+                                <label for="infoEscolar" class="block text-sm font-medium text-gray-700">Institución
+                                    Educativa</label>
+                                <input type="text" name="infoEscolar" id="infoEscolar"
+                                    value="{{ alumno.datosPersonales.infoEscolar }}"
+                                    class="mt-1 focus:ring-green-500 focus:border-green-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- TAB CONTENT: REPRESENTANTES -->
+                    <div id="tab-content-representantes" class="tab-content px-4 py-5 bg-white space-y-6 sm:p-6 hidden">
+                        <div class="flex justify-between items-center mb-4 border-b pb-2">
+                            <h4 class="text-lg font-medium text-gray-900">Lista de Representantes</h4>
+                            <button type="button" onclick="addRepresentante()"
+                                class="inline-flex items-center px-3 py-1.5 border border-transparent text-xs font-medium rounded-full shadow-sm text-white bg-green-600 hover:bg-green-700 focus:outline-none">
+                                + Agregar
+                            </button>
+                        </div>
+
+                        <div id="representantes-container" class="space-y-4">
+                            <!-- Los items se renderizarán vía JS -->
+                        </div>
+                        <p id="no-rep-msg" class="text-sm text-gray-500 text-center py-4 hidden">No hay representantes
+                            registrados.</p>
+                    </div>
+
+                    <!-- TAB CONTENT: SACRAMENTOS -->
+                    <div id="tab-content-sacramentos" class="tab-content px-4 py-5 bg-white space-y-6 sm:p-6 hidden">
+                        <div class="flex justify-between items-center mb-4 border-b pb-2">
+                            <h4 class="text-lg font-medium text-gray-900">Historial de Sacramentos</h4>
+                            <button type="button" onclick="addSacramento()"
+                                class="inline-flex items-center px-3 py-1.5 border border-transparent text-xs font-medium rounded-full shadow-sm text-white bg-green-600 hover:bg-green-700 focus:outline-none">
+                                + Agregar
+                            </button>
+                        </div>
+
+                        <div id="sacramentos-container" class="space-y-6">
+                            <!-- Los items se renderizarán vía JS -->
+                        </div>
+                        <p id="no-sac-msg" class="text-sm text-gray-500 text-center py-4 hidden">No hay sacramentos
+                            registrados.</p>
+                    </div>
+
+                    <div class="px-4 py-3 bg-gray-50 text-right sm:px-6 border-t">
+                        <a href="{% url 'nosql_alumno_list' %}"
+                            class="mr-4 inline-flex justify-center py-2 px-4 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none">
+                            Cancelar
+                        </a>
+                        <button type="submit"
+                            class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none">
+                            Guardar Cambios
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    // --- STATE MANAGEMENT ---
+    // Inicializamos arrays con datos de Django o vacíos
+    let representantes = JSON.parse('{{ representantes_json|escapejs }}');
+    let sacramentos = JSON.parse('{{ sacramentos_json|escapejs }}');
+
+    // Fix: Convertir fechas de JS string a input date string (YYYY-MM-DD)
+    sacramentos.forEach(s => {
+        if (s.fechaRealizacion) {
+            // Asumimos formato ISO o similar, extraemos YYYY-MM-DD
+            s.fechaRealizacionFmt = s.fechaRealizacion.split('T')[0];
+        }
+        if (s.documentos && s.documentos.fecha) {
+            s.documentos.fechaFmt = s.documentos.fecha.split('T')[0];
+        }
+    });
+
+    // --- TABS LOGIC ---
+    function switchTab(tabName) {
+        // Hide all contents
+        document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+        // Show selected content
+        document.getElementById('tab-content-' + tabName).classList.remove('hidden');
+
+        // Update Buttons Styles
+        document.querySelectorAll('.tab-btn').forEach(el => {
+            el.classList.remove('bg-gray-100', 'text-gray-900');
+            el.classList.add('text-gray-600', 'hover:bg-gray-50');
+        });
+        const activeBtn = document.getElementById('tab-btn-' + tabName);
+        activeBtn.classList.remove('text-gray-600', 'hover:bg-gray-50');
+        activeBtn.classList.add('bg-gray-100', 'text-gray-900');
+    }
+
+    // --- REPRESENTANTES LOGIC ---
+    function renderRepresentantes() {
+        const container = document.getElementById('representantes-container');
+        container.innerHTML = '';
+        const msg = document.getElementById('no-rep-msg');
+        document.getElementById('badge-representantes').innerText = representantes.length;
+
+        if (representantes.length === 0) {
+            msg.classList.remove('hidden');
+            return;
+        }
+        msg.classList.add('hidden');
+
+        representantes.forEach((rep, index) => {
+            // Creamos un ID único temporal basado en índice para manipulación DOM
+            // Names are constructed as: representantes[index].campo
+            const html = `
+                <div class="bg-gray-50 p-4 rounded-lg border border-gray-200 relative group">
+                    <button type="button" onclick="removeRepresentante(${index})" class="absolute top-2 right-2 text-gray-400 hover:text-red-500">
+                        <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                    </button>
+                    <h5 class="text-sm font-bold text-gray-500 mb-2 uppercase tracking-wide">Representante #${index + 1}</h5>
+                    <div class="grid grid-cols-6 gap-4">
+                        <div class="col-span-6 sm:col-span-3">
+                            <label class="block text-xs font-medium text-gray-700">Nombre</label>
+                            <input type="text" name="representantes[${index}].nombre" value="${rep.nombre || ''}" class="mt-1 block w-full text-sm border-gray-300 rounded-md focus:ring-green-500 focus:border-green-500">
+                        </div>
+                        <div class="col-span-6 sm:col-span-3">
+                            <label class="block text-xs font-medium text-gray-700">Apellido</label>
+                            <input type="text" name="representantes[${index}].apellido" value="${rep.apellido || ''}" class="mt-1 block w-full text-sm border-gray-300 rounded-md focus:ring-green-500 focus:border-green-500">
+                        </div>
+                        <div class="col-span-6 sm:col-span-3">
+                            <label class="block text-xs font-medium text-gray-700">Relación / Ocupación</label>
+                            <input type="text" name="representantes[${index}].ocupacion" value="${rep.ocupacion || ''}" class="mt-1 block w-full text-sm border-gray-300 rounded-md focus:ring-green-500 focus:border-green-500">
+                        </div>
+                        <div class="col-span-6 sm:col-span-3">
+                            <label class="block text-xs font-medium text-gray-700">Teléfono</label>
+                            <input type="text" name="representantes[${index}].telefono" value="${rep.telefono || ''}" class="mt-1 block w-full text-sm border-gray-300 rounded-md focus:ring-green-500 focus:border-green-500">
+                        </div>
+                        <div class="col-span-6">
+                            <label class="block text-xs font-medium text-gray-700">Email</label>
+                            <input type="email" name="representantes[${index}].email" value="${rep.email || ''}" class="mt-1 block w-full text-sm border-gray-300 rounded-md focus:ring-green-500 focus:border-green-500">
+                        </div>
+                    </div>
+                </div>
+            `;
+            container.insertAdjacentHTML('beforeend', html);
+        });
+    }
+
+    function addRepresentante() {
+        representantes.push({ nombre: '', apellido: '' });
+        renderRepresentantes();
+    }
+
+    function removeRepresentante(index) {
+        representantes.splice(index, 1);
+        renderRepresentantes();
+    }
+
+    // --- SACRAMENTOS LOGIC ---
+    function renderSacramentos() {
+        const container = document.getElementById('sacramentos-container');
+        container.innerHTML = '';
+        const msg = document.getElementById('no-sac-msg');
+        document.getElementById('badge-sacramentos').innerText = sacramentos.length;
+
+        if (sacramentos.length === 0) {
+            msg.classList.remove('hidden');
+            return;
+        }
+        msg.classList.add('hidden');
+
+        sacramentos.forEach((sac, index) => {
+            const doc = sac.documentos || {}; // Nested object for docs
+            const html = `
+                <div class="bg-gray-50 p-4 rounded-lg border border-gray-200 relative">
+                     <button type="button" onclick="removeSacramento(${index})" class="absolute top-2 right-2 text-gray-400 hover:text-red-500">
+                        <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                    </button>
+                    <div class="grid grid-cols-6 gap-4">
+                        <!-- Header -->
+                        <div class="col-span-6">
+                             <h5 class="text-sm font-bold text-green-700 uppercase tracking-wide">Sacramento #${index + 1}</h5>
+                        </div>
+                        
+                        <!-- Main Info -->
+                        <div class="col-span-6 sm:col-span-3">
+                            <label class="block text-xs font-medium text-gray-700">Sacramento (Ej: Bautismo)</label>
+                            <input type="text" name="sacramentos[${index}].nombreSacramento" value="${sac.nombreSacramento || ''}" required 
+                                class="mt-1 block w-full text-sm border-gray-300 rounded-md focus:ring-green-500 focus:border-green-500">
+                        </div>
+                        <div class="col-span-6 sm:col-span-3">
+                            <label class="block text-xs font-medium text-gray-700">Fecha Realización</label>
+                            <input type="date" name="sacramentos[${index}].fechaRealizacion" value="${sac.fechaRealizacionFmt || ''}"
+                                class="mt-1 block w-full text-sm border-gray-300 rounded-md focus:ring-green-500 focus:border-green-500">
+                        </div>
+                        <div class="col-span-6">
+                            <label class="block text-xs font-medium text-gray-700">Lugar (Parroquia)</label>
+                            <input type="text" name="sacramentos[${index}].lugar" value="${sac.lugar || ''}"
+                                class="mt-1 block w-full text-sm border-gray-300 rounded-md focus:ring-green-500 focus:border-green-500">
+                        </div>
+
+                        <!-- Nested Documents -->
+                        <div class="col-span-6 mt-2 pt-2 border-t border-gray-200">
+                            <span class="text-xs font-semibold text-gray-500">Datos del Documento de Soporte</span>
+                        </div>
+                        <div class="col-span-6 sm:col-span-2">
+                             <label class="block text-xs font-medium text-gray-700">ID Documento</label>
+                             <input type="text" name="sacramentos[${index}].documentos.id" value="${doc.id || ''}"
+                                class="mt-1 block w-full text-xs border-gray-300 rounded-md">
+                        </div>
+                        <div class="col-span-6 sm:col-span-2">
+                             <label class="block text-xs font-medium text-gray-700">Emitido Por</label>
+                             <input type="text" name="sacramentos[${index}].documentos.emitidoPor" value="${doc.emitidoPor || ''}"
+                                class="mt-1 block w-full text-xs border-gray-300 rounded-md">
+                        </div>
+                         <div class="col-span-6 sm:col-span-2">
+                             <label class="block text-xs font-medium text-gray-700">Fecha Emisión</label>
+                             <input type="date" name="sacramentos[${index}].documentos.fecha" value="${doc.fechaFmt || ''}"
+                                class="mt-1 block w-full text-xs border-gray-300 rounded-md">
+                        </div>
+                    </div>
+                </div>
+            `;
+            container.insertAdjacentHTML('beforeend', html);
+        });
+    }
+
+    function addSacramento() {
+        sacramentos.push({ nombreSacramento: '', documentos: {} });
+        renderSacramentos();
+    }
+
+    function removeSacramento(index) {
+        sacramentos.splice(index, 1);
+        renderSacramentos();
+    }
+
+
+    // --- INITIALIZATION ---
+    document.addEventListener('DOMContentLoaded', () => {
+        renderRepresentantes();
+        renderSacramentos();
+    });
+
+    // --- FORM SUBMIT INTERCEPTION (Optional, but good for cleaning) ---
+    // Django doesn't naturally parse "representantes[0].nombre" into a list of dicts.
+    // We will handle that parsing in the View manually, so standard form submit is fine.
+    // The view will look for keys starting with "representantes[" etc.
+
+</script>
+{% endblock %}

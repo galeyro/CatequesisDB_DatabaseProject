@@ -33,6 +33,22 @@
                     </div>
                     {% if user.is_authenticated %}
                     <div class="hidden md:ml-6 md:flex md:space-x-8">
+                        {% if is_nosql %}
+                        <!-- Menú NoSQL -->
+                        <a href="{% url 'nosql_alumno_list' %}"
+                            class="border-transparent text-green-600 hover:border-green-300 hover:text-green-800 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
+                            Alumnos (NoSQL)
+                        </a>
+                        <a href="{% url 'nosql_grupo_list' %}"
+                            class="border-transparent text-green-600 hover:border-green-300 hover:text-green-800 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
+                            Grupos (NoSQL)
+                        </a>
+                        <a href="{% url 'nosql_catequista_list' %}"
+                            class="border-transparent text-green-600 hover:border-green-300 hover:text-green-800 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
+                            Catequistas (NoSQL)
+                        </a>
+                        {% else %}
+                        <!-- Menú SQL (Original) -->
                         <a href="{% url 'alumno_list' %}"
                             class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
                             Alumnos
@@ -45,6 +61,7 @@
                             class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
                             Catálogos
                         </a>
+                        {% endif %}
                     </div>
                     {% endif %}
                 </div>

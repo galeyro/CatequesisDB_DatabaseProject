@@ -1,6 +1,7 @@
 from django.contrib import admin
 from django.urls import path, include
 from . import views
+from . import views_nosql
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -9,6 +10,17 @@ urlpatterns = [
     path('', views.home, name='home'),
     path('dashboard/', views.dashboard, name='dashboard'),
     path('sql/', views.sql_home, name='sql_home'),
+    
+    # NoSQL Views
+    path('nosql/', views_nosql.nosql_home, name='nosql_home'),
+    path('nosql/alumnos/', views_nosql.alumno_list, name='nosql_alumno_list'),
+    path('nosql/alumnos/nuevo/', views_nosql.alumno_create, name='nosql_alumno_create'),
+    path('nosql/alumnos/<str:id>/editar/', views_nosql.alumno_edit, name='nosql_alumno_edit'),
+    path('nosql/alumnos/<str:id>/', views_nosql.alumno_detail, name='nosql_alumno_detail'),
+    path('nosql/alumnos/<str:id>/borrar/', views_nosql.alumno_delete, name='nosql_alumno_delete'),
+    
+    path('nosql/grupos/', views_nosql.grupo_list, name='nosql_grupo_list'),
+    path('nosql/catequistas/', views_nosql.catequista_list, name='nosql_catequista_list'),
     
     # SQL Views
     path('alumnos/', views.alumno_list, name='alumno_list'),

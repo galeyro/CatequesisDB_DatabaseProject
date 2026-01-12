@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="text-center py-20">
+    <h1 class="text-4xl font-bold text-green-600 mb-4">Motor NoSQL</h1>
+    <p class="text-xl text-gray-600">Gestión de datos flexible con MongoDB</p>
+
+    <div class="mt-10 grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto px-4">
+        <!-- Card Alumnos -->
+        <a href="{% url 'nosql_alumno_list' %}"
+            class="block p-6 bg-white rounded-lg shadow-md hover:shadow-lg transition border-l-4 border-green-500">
+            <h3 class="text-xl font-semibold mb-2">Alumnos</h3>
+            <p class="text-gray-500">Inscripciones y datos personales</p>
+        </a>
+        <!-- Card Grupos -->
+        <a href="{% url 'nosql_grupo_list' %}"
+            class="block p-6 bg-white rounded-lg shadow-md hover:shadow-lg transition border-l-4 border-green-500">
+            <h3 class="text-xl font-semibold mb-2">Grupos</h3>
+            <p class="text-gray-500">Gestión de periodos y catequistas</p>
+        </a>
+        <!-- Card Catequistas -->
+        <a href="{% url 'nosql_catequista_list' %}"
+            class="block p-6 bg-white rounded-lg shadow-md hover:shadow-lg transition border-l-4 border-green-500">
+            <h3 class="text-xl font-semibold mb-2">Catequistas</h3>
+            <p class="text-gray-500">Perfiles y roles</p>
+        </a>
+    </div>
+</div>
+{% endblock %}
