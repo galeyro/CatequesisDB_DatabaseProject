@@ -20,7 +20,15 @@ urlpatterns = [
     path('nosql/alumnos/<str:id>/borrar/', views_nosql.alumno_delete, name='nosql_alumno_delete'),
     
     path('nosql/grupos/', views_nosql.grupo_list, name='nosql_grupo_list'),
+    path('nosql/grupos/nuevo/', views_nosql.grupo_create, name='nosql_grupo_create'),
+    path('nosql/grupos/<str:id>/editar/', views_nosql.grupo_edit, name='nosql_grupo_edit'),
+    path('nosql/grupos/<str:id>/', views_nosql.grupo_detail, name='nosql_grupo_detail'),
+    path('nosql/grupos/<str:id>/borrar/', views_nosql.grupo_delete, name='nosql_grupo_delete'),
     path('nosql/catequistas/', views_nosql.catequista_list, name='nosql_catequista_list'),
+    path('nosql/catequistas/nuevo/', views_nosql.catequista_create, name='nosql_catequista_create'),
+    path('nosql/catequistas/<str:id>/editar/', views_nosql.catequista_edit, name='nosql_catequista_edit'),
+    path('nosql/catequistas/<str:id>/', views_nosql.catequista_detail, name='nosql_catequista_detail'),
+    path('nosql/catequistas/<str:id>/borrar/', views_nosql.catequista_delete, name='nosql_catequista_delete'),
     
     # SQL Views
     path('alumnos/', views.alumno_list, name='alumno_list'),

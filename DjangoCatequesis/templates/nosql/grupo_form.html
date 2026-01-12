@@ -1,0 +1,132 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+    <div class="md:grid md:grid-cols-3 md:gap-6">
+        <div class="md:col-span-1">
+            <div class="px-4 sm:px-0">
+                <h3 class="text-lg font-medium leading-6 text-gray-900">Datos del Grupo (NoSQL)</h3>
+                <p class="mt-1 text-sm text-gray-600">
+                    Gestión de grupos y asignación de catequistas.
+                </p>
+            </div>
+        </div>
+
+        <div class="mt-5 md:mt-0 md:col-span-2">
+            <form action="" method="POST">
+                {% csrf_token %}
+                <div class="shadow sm:rounded-md sm:overflow-hidden bg-white">
+                    <div class="px-4 py-5 bg-white space-y-6 sm:p-6">
+
+                        <h4 class="text-lg font-medium text-gray-900 mb-4 border-b pb-2">Datos Generales</h4>
+                        <div class="grid grid-cols-6 gap-6">
+                            <div class="col-span-6 sm:col-span-4">
+                                <label for="nombreGrupo" class="block text-sm font-medium text-gray-700">Nombre del
+                                    Grupo</label>
+                                <input type="text" name="nombreGrupo" id="nombreGrupo"
+                                    value="{{ grupo.datosGenerales.nombreGrupo }}" required
+                                    class="mt-1 focus:ring-green-500 focus:border-green-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                            </div>
+
+                            <div class="col-span-6 sm:col-span-3">
+                                <label for="nivel" class="block text-sm font-medium text-gray-700">Nivel</label>
+                                <input type="text" name="nivel" id="nivel"
+                                    value="{{ grupo.datosGenerales.nivel.nombre }}" placeholder="Ej: Confirmación 1"
+                                    class="mt-1 focus:ring-green-500 focus:border-green-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                            </div>
+
+                            <div class="col-span-6 sm:col-span-3">
+                                <label for="periodo" class="block text-sm font-medium text-gray-700">Periodo</label>
+                                <input type="text" name="periodo" id="periodo"
+                                    value="{{ grupo.datosGenerales.periodo.nombre }}" placeholder="Ej: 2024-2025"
+                                    class="mt-1 focus:ring-green-500 focus:border-green-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                            </div>
+                        </div>
+
+                        <div class="mt-6">
+                            <div class="flex justify-between items-center mb-4 border-b pb-2">
+                                <h4 class="text-lg font-medium text-gray-900">Catequistas Asignados</h4>
+                                <button type="button" onclick="addCatequista()"
+                                    class="inline-flex items-center px-3 py-1.5 border border-transparent text-xs font-medium rounded-full shadow-sm text-white bg-green-600 hover:bg-green-700 focus:outline-none">
+                                    + Agregar
+                                </button>
+                            </div>
+
+                            <div id="catequistas-container" class="space-y-3">
+                                <!-- JS rendered items -->
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="px-4 py-3 bg-gray-50 text-right sm:px-6 border-t">
+                        <a href="{% url 'nosql_grupo_list' %}"
+                            class="mr-4 inline-flex justify-center py-2 px-4 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none">
+                            Cancelar
+                        </a>
+                        <button type="submit"
+                            class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none">
+                            Guardar Grupo
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Inicialización segura con ID fix
+    let catequistas = JSON.parse('{{ catequistas_json|escapejs }}');
+    // Lista completa de opciones
+    let availableCatequistas = JSON.parse('{{ available_catequistas_json|escapejs }}');
+
+    function renderCatequistas() {
+        const container = document.getElementById('catequistas-container');
+        container.innerHTML = '';
+
+        catequistas.forEach((cat, index) => {
+            // Construir opciones del select
+            let optionsHtml = '<option value="">-- Seleccionar --</option>';
+            availableCatequistas.forEach(opt => {
+                const selected = cat.id === opt.id ? 'selected' : '';
+                optionsHtml += `<option value="${opt.id}" ${selected}>${opt.nombreCompleto}</option>`;
+            });
+
+            const html = `
+                <div class="flex items-center space-x-4 bg-gray-50 p-2 rounded border border-gray-200">
+                    <div class="flex-grow">
+                        <label class="block text-xs font-medium text-gray-500">Catequista</label>
+                        <select name="catequistas[${index}].id" 
+                                class="mt-1 block w-full text-sm border-gray-300 rounded-md focus:ring-green-500 focus:border-green-500">
+                            ${optionsHtml}
+                        </select>
+                    </div>
+                    <div class="flex-shrink-0 pt-4">
+                        <button type="button" onclick="removeCatequista(${index})" class="text-gray-400 hover:text-red-500">
+                            <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
+                        </button>
+                    </div>
+                </div>
+            `;
+            container.insertAdjacentHTML('beforeend', html);
+        });
+
+        if (catequistas.length === 0) {
+            container.innerHTML = '<p class="text-sm text-gray-400 italic text-center">Sin catequistas asignados.</p>';
+        }
+    }
+
+    function addCatequista() {
+        catequistas.push({ id: '' });
+        renderCatequistas();
+    }
+
+    function removeCatequista(index) {
+        catequistas.splice(index, 1);
+        renderCatequistas();
+    }
+
+    document.addEventListener('DOMContentLoaded', renderCatequistas);
+</script>
+{% endblock %}

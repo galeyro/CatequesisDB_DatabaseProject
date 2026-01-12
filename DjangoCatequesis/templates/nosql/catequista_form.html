@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+    <div class="md:grid md:grid-cols-3 md:gap-6">
+        <div class="md:col-span-1">
+            <div class="px-4 sm:px-0">
+                <h3 class="text-lg font-medium leading-6 text-gray-900">Datos del Catequista (NoSQL)</h3>
+                <p class="mt-1 text-sm text-gray-600">
+                    Información personal y de contacto.
+                </p>
+            </div>
+        </div>
+
+        <div class="mt-5 md:mt-0 md:col-span-2">
+            <form action="" method="POST">
+                {% csrf_token %}
+                <div class="shadow sm:rounded-md sm:overflow-hidden bg-white">
+                    <div class="px-4 py-5 bg-white space-y-6 sm:p-6">
+
+                        <h4 class="text-lg font-medium text-gray-900 mb-4 border-b pb-2">Información Personal</h4>
+                        <div class="grid grid-cols-6 gap-6">
+                            <div class="col-span-6 sm:col-span-3">
+                                <label for="nombre" class="block text-sm font-medium text-gray-700">Nombre</label>
+                                <input type="text" name="nombre" id="nombre"
+                                    value="{{ catequista.datosPersonales.nombre }}" required
+                                    class="mt-1 focus:ring-green-500 focus:border-green-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                            </div>
+
+                            <div class="col-span-6 sm:col-span-3">
+                                <label for="apellido" class="block text-sm font-medium text-gray-700">Apellido</label>
+                                <input type="text" name="apellido" id="apellido"
+                                    value="{{ catequista.datosPersonales.apellido }}" required
+                                    class="mt-1 focus:ring-green-500 focus:border-green-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                            </div>
+
+                            <div class="col-span-6 sm:col-span-3">
+                                <label for="fechaNacimiento" class="block text-sm font-medium text-gray-700">Fecha de
+                                    Nacimiento</label>
+                                <input type="date" name="fechaNacimiento" id="fechaNacimiento"
+                                    value="{{ catequista.fechaNacimiento_fmt }}"
+                                    class="mt-1 focus:ring-green-500 focus:border-green-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                            </div>
+
+                            <div class="col-span-6 sm:col-span-3">
+                                <label for="telefono" class="block text-sm font-medium text-gray-700">Teléfono</label>
+                                <input type="text" name="telefono" id="telefono"
+                                    value="{{ catequista.datosPersonales.telefono }}"
+                                    class="mt-1 focus:ring-green-500 focus:border-green-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                            </div>
+
+                            <div class="col-span-6 border-t pt-4 mt-2">
+                                <label for="email" class="block text-sm font-medium text-gray-700">Correo
+                                    Electrónico</label>
+                                <input type="email" name="email" id="email"
+                                    value="{{ catequista.datosPersonales.email }}"
+                                    class="mt-1 focus:ring-green-500 focus:border-green-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                            </div>
+
+                            <div class="col-span-6">
+                                <label for="direccion" class="block text-sm font-medium text-gray-700">Dirección</label>
+                                <input type="text" name="direccion" id="direccion"
+                                    value="{{ catequista.datosPersonales.direccion }}"
+                                    class="mt-1 focus:ring-green-500 focus:border-green-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="px-4 py-3 bg-gray-50 text-right sm:px-6 border-t">
+                        <a href="{% url 'nosql_catequista_list' %}"
+                            class="mr-4 inline-flex justify-center py-2 px-4 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none">
+                            Cancelar
+                        </a>
+                        <button type="submit"
+                            class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none">
+                            Guardar Catequista
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

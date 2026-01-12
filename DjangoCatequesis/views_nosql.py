@@ -10,6 +10,17 @@ from bson import json_util
 def nosql_home(request):
     return render(request, 'nosql/home.html', {'is_nosql': True})
 
+# --- HELPER GENERICO (Simplificado) ---
+def parse_multi_level_post(request):
+    """
+    Parsea campos anidados tipo 'datos.nombre' y arrays 'lista[0].campo'
+    """
+    data_out = {}
+    
+    # Logic similar a process_alumno_form pero mas generico si fuera necesario
+    # Por ahora mantenemos el especifico, y agregamos uno de Grupos
+    return data_out
+
 # --- ALUMNOS ---
 
 def alumno_list(request):
@@ -230,6 +241,134 @@ def grupo_list(request):
         g['id'] = str(g['_id'])
     return render(request, 'nosql/grupo_list.html', {'grupos': grupos, 'is_nosql': True})
 
+def grupo_create(request):
+    db = get_db()
+    if request.method == 'POST':
+        
+        # Procesar catequistas
+        # Procesar catequistas (Look up names by ID)
+        catequistas = []
+        for key, value in request.POST.items():
+            if key.startswith('catequistas[') and 'id' in key:
+                if value.strip():
+                    # value is the ID. We find the name in DB or from hidden field?
+                    # Better from DB to be safe, or just trust the select text?
+                    # The select sends value (ID). We need the text.
+                    # Simplified: We will lookup.
+                    try:
+                        cat_obj = db.catequistas.find_one({'_id': ObjectId(value)})
+                        if cat_obj:
+                            nombre = f"{cat_obj.get('datosPersonales', {}).get('nombre', '')} {cat_obj.get('datosPersonales', {}).get('apellido', '')}".strip()
+                            catequistas.append({'id': value, 'nombreCompleto': nombre})
+                    except:
+                        pass
+        
+        data = {
+            'datosGenerales': {
+                'nombreGrupo': request.POST.get('nombreGrupo'),
+                'nivel': {'nombre': request.POST.get('nivel')},
+                'periodo': {'nombre': request.POST.get('periodo')},
+            },
+            'catequistas': catequistas,
+            'alumnosInscritos': [] # Array simple de IDs o objetos minimos
+        }
+        
+        db.grupos.insert_one(data)
+        return redirect('nosql_grupo_list')
+
+    # Fetch all catequistas for the dropdown
+    all_catequistas = list(db.catequistas.find({}, {'_id': 1, 'datosPersonales.nombre': 1, 'datosPersonales.apellido': 1}))
+    # Helper to format for JS
+    catequistas_opts = []
+    for c in all_catequistas:
+        nombre = f"{c.get('datosPersonales', {}).get('nombre', '')} {c.get('datosPersonales', {}).get('apellido', '')}".strip()
+        catequistas_opts.append({'id': str(c['_id']), 'nombreCompleto': nombre})
+
+    return render(request, 'nosql/grupo_form.html', {
+        'is_nosql': True, 
+        'catequistas_json': '[]',
+        'available_catequistas_json': json.dumps(catequistas_opts)
+    })
+
+def grupo_edit(request, id):
+    db = get_db()
+    try:
+        obj_id = ObjectId(id)
+    except:
+        raise Http404("ID Invalido")
+        
+    grupo = db.grupos.find_one({'_id': obj_id})
+    if not grupo:
+        raise Http404("Grupo no encontrado")
+
+    if request.method == 'POST':
+         # Procesar catequistas again (Don't Repeat Yourself: refactor later if needed)
+        # Procesar catequistas again
+        catequistas = []
+        for key, value in request.POST.items():
+            if key.startswith('catequistas[') and 'id' in key:
+                 if value.strip():
+                    try:
+                        cat_obj = db.catequistas.find_one({'_id': ObjectId(value)})
+                        if cat_obj:
+                            nombre = f"{cat_obj.get('datosPersonales', {}).get('nombre', '')} {cat_obj.get('datosPersonales', {}).get('apellido', '')}".strip()
+                            catequistas.append({'id': value, 'nombreCompleto': nombre})
+                    except:
+                        pass
+        
+        update_data = {
+            'datosGenerales.nombreGrupo': request.POST.get('nombreGrupo'),
+            'datosGenerales.nivel.nombre': request.POST.get('nivel'),
+            'datosGenerales.periodo.nombre': request.POST.get('periodo'),
+            'catequistas': catequistas
+        }
+        
+        db.grupos.update_one({'_id': obj_id}, {'$set': update_data})
+        return redirect('nosql_grupo_list')
+        
+    grupo['id'] = str(grupo['_id'])
+
+    # Fetch all catequistas for the dropdown
+    all_catequistas = list(db.catequistas.find({}, {'_id': 1, 'datosPersonales.nombre': 1, 'datosPersonales.apellido': 1}))
+    catequistas_opts = []
+    for c in all_catequistas:
+        nombre = f"{c.get('datosPersonales', {}).get('nombre', '')} {c.get('datosPersonales', {}).get('apellido', '')}".strip()
+        catequistas_opts.append({'id': str(c['_id']), 'nombreCompleto': nombre})
+
+    return render(request, 'nosql/grupo_form.html', {
+        'grupo': grupo, 
+        'is_nosql': True,
+        'catequistas_json': json.dumps(grupo.get('catequistas', [])),
+        'available_catequistas_json': json.dumps(catequistas_opts)
+    })
+
+def grupo_delete(request, id):
+    db = get_db()
+    try:
+        obj_id = ObjectId(id)
+    except:
+        pass
+    db.grupos.delete_one({'_id': obj_id})
+    db.grupos.delete_one({'_id': obj_id})
+    return redirect('nosql_grupo_list')
+
+def grupo_detail(request, id):
+    db = get_db()
+    try:
+        obj_id = ObjectId(id)
+    except:
+        raise Http404("ID invalido")
+        
+    grupo = db.grupos.find_one({'_id': obj_id})
+    if not grupo:
+        raise Http404("Grupo no encontrado")
+
+    grupo['id'] = str(grupo['_id'])
+    
+    # Podriamos enriquecer alumnosInscritos aqui si son solo IDs, pero por ahora lo dejamos raw
+    
+    return render(request, 'nosql/grupo_detail.html', {'grupo': grupo, 'is_nosql': True})
+
 # --- CATEQUISTAS ---
 
 def catequista_list(request):
@@ -238,3 +377,94 @@ def catequista_list(request):
     for c in catequistas:
         c['id'] = str(c['_id'])
     return render(request, 'nosql/catequista_list.html', {'catequistas': catequistas, 'is_nosql': True})
+
+def catequista_create(request):
+    if request.method == 'POST':
+        db = get_db()
+        data = {
+            'username': request.POST.get('email'), # Usamos email como username por defecto
+            'rol': 'catequista',
+            'datosPersonales': {
+                'nombre': request.POST.get('nombre'),
+                'apellido': request.POST.get('apellido'),
+                'fechaNacimiento': request.POST.get('fechaNacimiento'), # fecha nacimiento string
+                'email': request.POST.get('email'),
+                'telefono': request.POST.get('telefono'),
+                'direccion': request.POST.get('direccion'),
+            }
+        }
+        # Parse fecha nacimiento if exists
+        dob = data['datosPersonales']['fechaNacimiento']
+        if dob:
+            try:
+                data['datosPersonales']['fechaNacimiento'] = datetime.strptime(dob, '%Y-%m-%d')
+            except:
+                pass
+
+        db.catequistas.insert_one(data)
+        return redirect('nosql_catequista_list')
+
+    return render(request, 'nosql/catequista_form.html', {'is_nosql': True})
+
+def catequista_edit(request, id):
+    db = get_db()
+    try:
+        obj_id = ObjectId(id)
+    except:
+        raise Http404("ID invalido")
+    
+    cat = db.catequistas.find_one({'_id': obj_id})
+    if not cat:
+        raise Http404("Catequista no encontrado")
+
+    if request.method == 'POST':
+        update_data = {
+            'datosPersonales.nombre': request.POST.get('nombre'),
+            'datosPersonales.apellido': request.POST.get('apellido'),
+            'datosPersonales.email': request.POST.get('email'),
+            'datosPersonales.telefono': request.POST.get('telefono'),
+            'datosPersonales.direccion': request.POST.get('direccion'),
+        }
+        
+        dob = request.POST.get('fechaNacimiento')
+        if dob:
+             try:
+                update_data['datosPersonales.fechaNacimiento'] = datetime.strptime(dob, '%Y-%m-%d')
+             except:
+                pass
+
+        db.catequistas.update_one({'_id': obj_id}, {'$set': update_data})
+        return redirect('nosql_catequista_list')
+
+    cat['id'] = str(cat['_id'])
+    
+    # Format date for input
+    if cat.get('datosPersonales', {}).get('fechaNacimiento'):
+        f = cat['datosPersonales']['fechaNacimiento']
+        if isinstance(f, datetime):
+            cat['fechaNacimiento_fmt'] = f.strftime('%Y-%m-%d')
+
+    return render(request, 'nosql/catequista_form.html', {'catequista': cat, 'is_nosql': True})
+
+def catequista_delete(request, id):
+    db = get_db()
+    try:
+        obj_id = ObjectId(id)
+    except:
+        pass
+    db.catequistas.delete_one({'_id': obj_id})
+    return redirect('nosql_catequista_list')
+
+def catequista_detail(request, id):
+    db = get_db()
+    try:
+        obj_id = ObjectId(id)
+    except:
+        raise Http404("ID invalido")
+    
+    cat = db.catequistas.find_one({'_id': obj_id})
+    if not cat:
+        raise Http404("Catequista no encontrado")
+    
+    cat['id'] = str(cat['_id'])
+    return render(request, 'nosql/catequista_detail.html', {'catequista': cat, 'is_nosql': True})
