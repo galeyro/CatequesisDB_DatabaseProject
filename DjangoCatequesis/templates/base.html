@@ -1,6 +1,7 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,9 +12,12 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Inter', sans-serif; }
+        body {
+            font-family: 'Inter', sans-serif;
+        }
     </style>
 </head>
+
 <body class="bg-gray-50 flex flex-col min-h-screen text-gray-800">
 
     <!-- Header / Navbar -->
@@ -27,26 +31,44 @@
                             Catequesis<span class="text-gray-800">DB</span>
                         </a>
                     </div>
+                    {% if user.is_authenticated %}
+                    <div class="hidden md:ml-6 md:flex md:space-x-8">
+                        <a href="{% url 'alumno_list' %}"
+                            class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
+                            Alumnos
+                        </a>
+                        <a href="{% url 'grupo_list' %}"
+                            class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
+                            Grupos
+                        </a>
+                        <a href="{% url 'catalogos_home' %}"
+                            class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
+                            Catálogos
+                        </a>
+                    </div>
+                    {% endif %}
                 </div>
 
                 <!-- Right Side: User Menu or Login -->
                 <div class="flex items-center">
                     {% if user.is_authenticated %}
-                        <div class="flex items-center space-x-4">
-                            <span class="text-sm font-medium text-gray-700">
-                                Hola, <span class="font-bold text-gray-900">{{ user.email }}</span>
-                            </span>
-                            <form action="{% url 'oidc_logout' %}" method="post">
-                                {% csrf_token %}
-                                <button type="submit" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition shadow-sm">
-                                    Cerrar Sesión
-                                </button>
-                            </form>
-                        </div>
+                    <div class="flex items-center space-x-4">
+                        <span class="text-sm font-medium text-gray-700">
+                            Hola, <span class="font-bold text-gray-900">{{ user.email }}</span>
+                        </span>
+                        <form action="{% url 'oidc_logout' %}" method="post">
+                            {% csrf_token %}
+                            <button type="submit"
+                                class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition shadow-sm">
+                                Cerrar Sesión
+                            </button>
+                        </form>
+                    </div>
                     {% else %}
-                        <a href="{% url 'oidc_authentication_init' %}" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition shadow-sm">
-                            Iniciar Sesión
-                        </a>
+                    <a href="{% url 'oidc_authentication_init' %}"
+                        class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition shadow-sm">
+                        Iniciar Sesión
+                    </a>
                     {% endif %}
                 </div>
             </div>
@@ -71,4 +93,5 @@
     </footer>
 
 </body>
+
 </html>

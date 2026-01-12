@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block title %}Borrar Periodo - CatequesisDB{% endblock %}
+
+{% block content %}
+<div class="max-w-md mx-auto bg-white shadow sm:rounded-lg overflow-hidden">
+    <div class="px-4 py-5 sm:px-6 bg-red-50">
+        <h3 class="text-lg leading-6 font-medium text-red-800">
+            Confirmar Eliminación
+        </h3>
+    </div>
+    <div class="px-4 py-5 sm:p-6">
+        <p class="text-sm text-gray-500">
+            ¿Estás seguro de que deseas eliminar el periodo <span class="font-bold text-gray-900">{{ periodo.nombre_periodo }}</span>?
+            <br><br>
+            ¡Advertencia! Eliminar un periodo lectivo podría dejar huérfanos a muchos grupos e inscripciones.
+        </p>
+    </div>
+    <div class="px-4 py-4 sm:px-6 bg-gray-50 flex justify-end space-x-3">
+        <a href="{% url 'periodo_list' %}"
+            class="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none">
+            Cancelar
+        </a>
+        <form method="POST" action="">
+            {% csrf_token %}
+            <button type="submit"
+                class="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
+                Eliminar Periodo
+            </button>
+        </form>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+
+{% block title %}Catálogos - CatequesisDB{% endblock %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+    <div class="px-4 py-6 sm:px-0">
+        <h1 class="text-3xl font-bold text-gray-900 mb-8">Administración de Catálogos</h1>
+
+        <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            <!-- Parroquias Card -->
+            <a href="{% url 'parroquia_list' %}" class="block group">
+                <div
+                    class="bg-white overflow-hidden shadow rounded-lg hover:shadow-md transition-shadow duration-300 border border-transparent hover:border-blue-500">
+                    <div class="px-4 py-5 sm:p-6">
+                        <dt class="text-lg font-medium text-gray-900 truncate flex items-center">
+                            <svg class="mr-3 h-6 w-6 text-blue-500" fill="none" stroke="currentColor"
+                                viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4">
+                                </path>
+                            </svg>
+                            Parroquias
+                        </dt>
+                        <dd class="mt-1 text-sm text-gray-500">
+                            Gestionar sedes o iglesias donde se imparten las catequesis.
+                        </dd>
+                    </div>
+                </div>
+            </a>
+
+            <!-- Niveles Card -->
+            <a href="{% url 'nivel_list' %}" class="block group">
+                <div
+                    class="bg-white overflow-hidden shadow rounded-lg hover:shadow-md transition-shadow duration-300 border border-transparent hover:border-green-500">
+                    <div class="px-4 py-5 sm:p-6">
+                        <dt class="text-lg font-medium text-gray-900 truncate flex items-center">
+                            <svg class="mr-3 h-6 w-6 text-green-500" fill="none" stroke="currentColor"
+                                viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                            Niveles
+                        </dt>
+                        <dd class="mt-1 text-sm text-gray-500">
+                            Configurar los niveles de formación y sacramentos requeridos.
+                        </dd>
+                    </div>
+                </div>
+            </a>
+
+            <!-- Periodos Card -->
+            <a href="{% url 'periodo_list' %}" class="block group">
+                <div
+                    class="bg-white overflow-hidden shadow rounded-lg hover:shadow-md transition-shadow duration-300 border border-transparent hover:border-purple-500">
+                    <div class="px-4 py-5 sm:p-6">
+                        <dt class="text-lg font-medium text-gray-900 truncate flex items-center">
+                            <svg class="mr-3 h-6 w-6 text-purple-500" fill="none" stroke="currentColor"
+                                viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z">
+                                </path>
+                            </svg>
+                            Periodos Lectivos
+                        </dt>
+                        <dd class="mt-1 text-sm text-gray-500">
+                            Administrar los años lectivos y sus fechas de vigencia.
+                        </dd>
+                    </div>
+                </div>
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

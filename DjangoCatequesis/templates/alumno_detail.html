@@ -102,6 +102,40 @@
                     {% endfor %}
                 </ul>
             </div>
+
+            <!-- Inscripciones -->
+            <div class="bg-white shadow overflow-hidden sm:rounded-lg border border-gray-100">
+                <div class="px-4 py-5 sm:px-6 bg-green-50 border-b border-green-100 flex justify-between items-center">
+                    <h3 class="text-lg leading-6 font-medium text-green-900">Inscripciones</h3>
+                    <a href="{% url 'inscripcion_create' alumno.pk %}"
+                        class="text-xs font-medium bg-green-100 text-green-800 py-1 px-2 rounded hover:bg-green-200">
+                        + Nueva
+                    </a>
+                </div>
+                <ul class="divide-y divide-gray-200">
+                    {% for inscripcion in inscripciones %}
+                    <li class="px-4 py-4 sm:px-6 hover:bg-gray-50">
+                        <div class="flex justify-between">
+                            <div>
+                                <p class="text-sm font-medium text-green-700">
+                                    {{ inscripcion.id_grupo.id_nivel.nombre_nivel }}
+                                </p>
+                                <p class="text-xs text-gray-500">Periodo: {{ inscripcion.id_grupo.id_periodo }}</p>
+                            </div>
+                            <span
+                                class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium 
+                                {% if inscripcion.estado_inscripcion == 'Activo' %}bg-green-100 text-green-800{% else %}bg-gray-100 text-gray-800{% endif %}">
+                                {{ inscripcion.estado_inscripcion }}
+                            </span>
+                        </div>
+                    </li>
+                    {% empty %}
+                    <li class="px-4 py-4 sm:px-6 text-sm text-gray-500 italic">
+                        No hay inscripciones activas.
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
         </div>
 
     </div>

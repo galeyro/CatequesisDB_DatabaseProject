@@ -136,6 +136,9 @@ class Grupo(models.Model):
         db_table = 'Grupo'
         managed = True
 
+    def __str__(self):
+        return f"{self.id_nivel} - {self.id_parroquia} ({self.id_periodo})"
+
 class GrupoCatequista(models.Model):
     grupo_id_grupo = models.ForeignKey(Grupo, on_delete=models.CASCADE, db_column='Grupo_id_grupo')
     catequista_id_catequista = models.ForeignKey(Catequista, on_delete=models.CASCADE, db_column='Catequista_id_catequista')
