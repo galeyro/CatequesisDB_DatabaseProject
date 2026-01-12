@@ -11,19 +11,27 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
 from pathlib import Path
+import os
+from dotenv import load_dotenv
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+# Load environment variables. 
+# We look for .env in the inner folder (where settings.py is) or root.
+load_dotenv() 
+load_dotenv(BASE_DIR / 'DjangoCatequesis' / '.env') # Fallback explicit load if it's inside the package
+
 
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-sk(evpx4h&h%xz^egaq2ql-lwr+ttg6pe_uw3$yj=-0d)(ls1m'
+SECRET_KEY = os.getenv('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.getenv('DEBUG', 'False') == 'True'
 
 ALLOWED_HOSTS = []
 
@@ -130,14 +138,17 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
 # Keycloak
-OIDC_RP_CLIENT_ID = 'catequesis-django-app'
-OIDC_RP_CLIENT_SECRET = 'fsWzDmuqdIYfhTlbXzE7x8qo56yWypl3'
+OIDC_RP_CLIENT_ID = os.getenv('KEYCLOAK_CLIENT_ID')
+OIDC_RP_CLIENT_SECRET = os.getenv('KEYCLOAK_CLIENT_SECRET')
 
-# URL de configuración de Keycloak (reemplaza 'tu-realm' y la URL)
-OIDC_OP_AUTHORIZATION_ENDPOINT = "http://localhost:8080/realms/CatequesisDB/protocol/openid-connect/auth"
-OIDC_OP_TOKEN_ENDPOINT = "http://localhost:8080/realms/CatequesisDB/protocol/openid-connect/token"
-OIDC_OP_USER_ENDPOINT = "http://localhost:8080/realms/CatequesisDB/protocol/openid-connect/userinfo"
-OIDC_OP_JWKS_ENDPOINT = "http://localhost:8080/realms/CatequesisDB/protocol/openid-connect/certs"
+# URL de configuración de Keycloak
+KC_URL = os.getenv('KEYCLOAK_URL', 'http://localhost:8080')
+KC_REALM = os.getenv('KEYCLOAK_REALM', 'CatequesisDB')
+
+OIDC_OP_AUTHORIZATION_ENDPOINT = f"{KC_URL}/realms/{KC_REALM}/protocol/openid-connect/auth"
+OIDC_OP_TOKEN_ENDPOINT = f"{KC_URL}/realms/{KC_REALM}/protocol/openid-connect/token"
+OIDC_OP_USER_ENDPOINT = f"{KC_URL}/realms/{KC_REALM}/protocol/openid-connect/userinfo"
+OIDC_OP_JWKS_ENDPOINT = f"{KC_URL}/realms/{KC_REALM}/protocol/openid-connect/certs"
 
 # Redirecciones
 LOGIN_REDIRECT_URL = "/"
