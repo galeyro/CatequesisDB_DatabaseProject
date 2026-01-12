@@ -46,7 +46,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-
+    'DjangoCatequesis',
 ]
 
 MIDDLEWARE = [
@@ -82,12 +82,27 @@ WSGI_APPLICATION = 'DjangoCatequesis.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
+# Database
+# https://docs.djangoproject.com/en/5.2/ref/settings/#databases
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'mssql',
+        'NAME': os.getenv('SQL_DB'),
+        'USER': os.getenv('SQL_USER'),
+        'PASSWORD': os.getenv('SQL_PASSWORD'),
+        'HOST': os.getenv('SQL_SERVER'),
+        'PORT': '1433',
+        'OPTIONS': {
+            'driver': 'ODBC Driver 17 for SQL Server',
+            'encrypt': True,  # Requerido para Azure
+            'trust_server_certificate': False, # Recomendado para producción
+        },
     }
 }
+
+# MongoDB Config (Usaremos pymongo directamente)
+MONGO_URI = os.getenv('MONGO_URI')
 
 
 # Password validation
