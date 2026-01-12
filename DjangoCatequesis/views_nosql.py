@@ -365,7 +365,12 @@ def grupo_detail(request, id):
 
     grupo['id'] = str(grupo['_id'])
     
-    # Podriamos enriquecer alumnosInscritos aqui si son solo IDs, pero por ahora lo dejamos raw
+    # Pre-procesar alumnos inscritos para que el ID sea string
+    if 'alumnosInscritos' in grupo:
+        for idx, alumno_data in enumerate(grupo['alumnosInscritos']):
+            if isinstance(alumno_data, dict) and 'idAlumno' in alumno_data:
+                 if isinstance(alumno_data['idAlumno'], ObjectId):
+                    grupo['alumnosInscritos'][idx]['idAlumno'] = str(alumno_data['idAlumno'])
     
     return render(request, 'nosql/grupo_detail.html', {'grupo': grupo, 'is_nosql': True})
 

@@ -76,8 +76,52 @@
                         <!-- TODO: If alumnosInscritos is just IDs, we might need to populate names in the View. 
                               For now assumes simplistic list or we will just show count/IDs -->
                         {% for alumno_ref in grupo.alumnosInscritos %}
-                        <li class="col-span-1 bg-white rounded shadow p-3">
-                            <span class="text-sm text-gray-700">ID: {{ alumno_ref }}</span>
+                        <li
+                            class="col-span-1 bg-white rounded-lg shadow divide-y divide-gray-200 border border-gray-100">
+                            <div class="w-full flex items-center justify-between p-4 space-x-6">
+                                <div class="flex-1 truncate">
+                                    <div class="flex items-center space-x-3">
+                                        <h3 class="text-gray-900 text-sm font-medium truncate">{{ alumno_ref.nombreCompleto }}</h3>
+                                        {% if alumno_ref.estadoInscripcion == 'Confirmado' or alumno_ref.estadoInscripcion == 'Activo' %}
+                                        <span
+                                            class="flex-shrink-0 inline-block px-2 py-0.5 text-green-800 text-xs font-medium bg-green-100 rounded-full">
+                                            {{ alumno_ref.estadoInscripcion }}</span>
+                                        {% else %}
+                                        <span
+                                            class="flex-shrink-0 inline-block px-2 py-0.5 text-yellow-800 text-xs font-medium bg-yellow-100 rounded-full">
+                                            {{ alumno_ref.estadoInscripcion }}</span>
+                                        {% endif %}
+                                    </div>
+                                    <p class="mt-1 text-gray-500 text-xs truncate">ID: {{ alumno_ref.idAlumno }}</p>
+                                </div>
+                                <img class="w-10 h-10 bg-gray-300 rounded-full flex-shrink-0"
+                                    src="https://ui-avatars.com/api/?name={{ alumno_ref.nombreCompleto }}&background=random"
+                                    alt="">
+                            </div>
+                            {% if alumno_ref.padrino %}
+                            <div class="px-4 py-3 bg-gray-50">
+                                <p class="text-xs font-medium text-gray-500 uppercase tracking-wider mb-1">Padrino</p>
+                                <p class="text-sm text-gray-900">{{ alumno_ref.padrino.nombre }} {{ alumno_ref.padrino.apellido }}</p>
+                                <p class="text-xs text-gray-500">{{ alumno_ref.padrino.telefono }}</p>
+                            </div>
+                            {% endif %}
+                            <div>
+                                <div class="-mt-px flex divide-x divide-gray-200">
+                                    <div class="w-0 flex-1 flex">
+                                        <a href="{% url 'nosql_alumno_detail' alumno_ref.idAlumno %}"
+                                            class="relative -mr-px w-0 flex-1 inline-flex items-center justify-center py-4 text-sm text-gray-700 font-medium border border-transparent rounded-bl-lg hover:text-gray-500">
+                                            <svg class="w-5 h-5 text-gray-400" fill="none" viewBox="0 0 24 24"
+                                                stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                            </svg>
+                                            <span class="ml-3">Ver Perfil</span>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
                         </li>
                         {% endfor %}
                     </ul>

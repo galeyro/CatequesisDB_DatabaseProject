@@ -10,12 +10,11 @@
         <div class="mt-4 sm:mt-0 sm:ml-16 sm:flex-none">
             <a href="{% url 'nosql_home' %}"
                 class="inline-flex items-center justify-center rounded-md border border-transparent bg-green-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-green-700">
-                <- Volver
-            </a>
-            <a href="{% url 'nosql_alumno_create' %}"
-                class="inline-flex items-center justify-center rounded-md border border-transparent bg-green-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-green-700">
-                Nuevo Alumno
-            </a>
+                <- Volver </a>
+                    <a href="{% url 'nosql_alumno_create' %}"
+                        class="inline-flex items-center justify-center rounded-md border border-transparent bg-green-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-green-700">
+                        Nuevo Alumno
+                    </a>
         </div>
     </div>
     <div class="mt-8 flex flex-col">
@@ -66,7 +65,8 @@
                                     <a href="{% url 'nosql_alumno_edit' alumno.id %}"
                                         class="text-green-600 hover:text-green-900 mr-4">Editar</a>
                                     <a href="{% url 'nosql_alumno_delete' alumno.id %}"
-                                        class="text-red-600 hover:text-red-900">Borrar</a>
+                                        class="text-red-600 hover:text-red-900"
+                                        onclick="return confirm('¿Seguro que desea eliminar este alumno?')">Borrar</a>
                                 </td>
                             </tr>
                             {% endfor %}
