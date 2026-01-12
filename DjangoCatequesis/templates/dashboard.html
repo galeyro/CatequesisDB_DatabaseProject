@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+
+{% block title %}Dashboard - CatequesisDB{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
+
+    <div class="text-center mb-12">
+        <h2 class="text-3xl font-extrabold text-gray-900 sm:text-4xl">
+            Panel de Control
+        </h2>
+        <p class="mt-4 text-xl text-gray-500">
+            Selecciona la base de datos con la que deseas trabajar hoy.
+        </p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
+
+        <!-- SQL Server Card -->
+        <a href="{% url 'sql_home' %}"
+            class="group relative bg-white rounded-2xl shadow-xl overflow-hidden hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 border border-gray-100">
+            <div class="absolute top-0 left-0 w-full h-2 bg-blue-600"></div>
+            <div class="p-8 text-center">
+                <div
+                    class="w-20 h-20 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-6 text-blue-600 transition-transform group-hover:scale-110">
+                    <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4">
+                        </path>
+                    </svg>
+                </div>
+                <h3 class="text-2xl font-bold text-gray-900 mb-2 group-hover:text-blue-600 transition-colors">SQL Server
+                </h3>
+                <p class="text-gray-500 mb-6">
+                    Gestión relacional tradicional. <br>Azure SQL Database.
+                </p>
+                <div
+                    class="inline-flex items-center text-blue-600 font-semibold group-hover:translate-x-1 transition-transform">
+                    Acceder al Módulo
+                    <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
+                    </svg>
+                </div>
+            </div>
+        </a>
+
+        <!-- NoSQL Card (MongoDB) -->
+        <div
+            class="relative bg-gray-50 rounded-2xl shadow-inner border border-gray-200 overflow-hidden opacity-75 cursor-not-allowed">
+            <div class="absolute top-0 left-0 w-full h-2 bg-green-500"></div>
+            <div
+                class="absolute top-4 right-4 bg-gray-200 text-gray-600 text-xs font-bold px-2 py-1 rounded uppercase tracking-wide">
+                Próximamente
+            </div>
+            <div class="p-8 text-center grayscale">
+                <div
+                    class="w-20 h-20 bg-gray-200 rounded-full flex items-center justify-center mx-auto mb-6 text-gray-500">
+                    <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10">
+                        </path>
+                    </svg>
+                </div>
+                <h3 class="text-2xl font-bold text-gray-900 mb-2">NoSQL MongoDB</h3>
+                <p class="text-gray-500 mb-6">
+                    Gestión documental flexible. <br>MongoDB Atlas.
+                </p>
+                <button disabled class="inline-flex items-center text-gray-400 font-semibold cursor-not-allowed">
+                    Deshabilitado
+                </button>
+            </div>
+        </div>
+
+    </div>
+</div>
+{% endblock %}

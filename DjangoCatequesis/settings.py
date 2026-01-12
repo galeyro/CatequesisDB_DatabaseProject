@@ -64,7 +64,7 @@ ROOT_URLCONF = 'DjangoCatequesis.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR / 'DjangoCatequesis' / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -132,9 +132,9 @@ AUTHENTICATION_BACKENDS = [
 # Internationalization
 # https://docs.djangoproject.com/en/5.2/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'es-ec'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'America/Guayaquil'
 
 USE_I18N = True
 
@@ -155,6 +155,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # Keycloak
 OIDC_RP_CLIENT_ID = os.getenv('KEYCLOAK_CLIENT_ID')
 OIDC_RP_CLIENT_SECRET = os.getenv('KEYCLOAK_CLIENT_SECRET')
+OIDC_RP_SIGN_ALGO = 'RS256'
 
 # URL de configuración de Keycloak
 KC_URL = os.getenv('KEYCLOAK_URL', 'http://localhost:8080')
@@ -166,5 +167,5 @@ OIDC_OP_USER_ENDPOINT = f"{KC_URL}/realms/{KC_REALM}/protocol/openid-connect/use
 OIDC_OP_JWKS_ENDPOINT = f"{KC_URL}/realms/{KC_REALM}/protocol/openid-connect/certs"
 
 # Redirecciones
-LOGIN_REDIRECT_URL = "/"
-LOGOUT_REDIRECT_URL = "/"
+LOGIN_REDIRECT_URL = "dashboard"
+LOGOUT_REDIRECT_URL = "home"

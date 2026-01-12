@@ -1,0 +1,164 @@
+{% extends 'base.html' %}
+
+{% block title %}
+{% if editing %}Editar Alumno{% else %}Nuevo Alumno{% endif %} - CatequesisDB
+{% endblock %}
+
+{% block content %}
+<div class="max-w-3xl mx-auto">
+
+    <div class="md:flex md:items-center md:justify-between mb-6">
+        <div class="flex-1 min-w-0">
+            <h2 class="text-2xl font-bold leading-7 text-gray-900 sm:text-3xl sm:truncate">
+                {% if editing %}Editar Alumno{% else %}Registrar Nuevo Alumno{% endif %}
+            </h2>
+        </div>
+        <div class="mt-4 flex md:mt-0 md:ml-4">
+            <a href="{% if editing %}{% url 'alumno_detail' alumno.pk %}{% else %}{% url 'alumno_list' %}{% endif %}"
+                class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none">
+                Cancelar
+            </a>
+        </div>
+    </div>
+
+    <form method="POST"
+        class="space-y-8 divide-y divide-gray-200 bg-white p-8 rounded-xl shadow-lg border border-gray-100">
+        {% csrf_token %}
+
+        {% if messages %}
+        <div class="rounded-md bg-red-50 p-4">
+            <div class="flex">
+                <div class="ml-3">
+                    {% for message in messages %}
+                    <p class="text-sm font-medium text-red-800">{{ message }}</p>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Sección Alumno -->
+        <div>
+            <div>
+                <h3 class="text-lg leading-6 font-medium text-gray-900">Datos del Alumno</h3>
+                <p class="mt-1 text-sm text-gray-500">Información personal y escolar básica.</p>
+            </div>
+            <div class="mt-6 grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
+
+                <div class="sm:col-span-3">
+                    <label class="block text-sm font-medium text-gray-700">Nombre</label>
+                    <div class="mt-1">
+                        {{ alumno_form.nombre }}
+                    </div>
+                    {{ alumno_form.nombre.errors }}
+                </div>
+
+                <div class="sm:col-span-3">
+                    <label class="block text-sm font-medium text-gray-700">Apellido</label>
+                    <div class="mt-1">
+                        {{ alumno_form.apellido }}
+                    </div>
+                </div>
+
+                <div class="sm:col-span-3">
+                    <label class="block text-sm font-medium text-gray-700">Fecha de Nacimiento</label>
+                    <div class="mt-1">
+                        {{ alumno_form.fecha_nacimiento }}
+                    </div>
+                </div>
+
+                <div class="sm:col-span-3">
+                    <label class="block text-sm font-medium text-gray-700">Lugar de Nacimiento</label>
+                    <div class="mt-1">
+                        {{ alumno_form.lugar_nacimiento }}
+                    </div>
+                </div>
+
+                <div class="sm:col-span-6">
+                    <label class="block text-sm font-medium text-gray-700">Dirección Domiciliaria</label>
+                    <div class="mt-1">
+                        {{ alumno_form.direccion }}
+                    </div>
+                </div>
+
+                <div class="sm:col-span-6">
+                    <label class="block text-sm font-medium text-gray-700">Teléfono Alumno</label>
+                    <div class="mt-1">
+                        {{ alumno_form.telefono_alumno }}
+                    </div>
+                </div>
+
+                <div class="sm:col-span-6">
+                    <label class="block text-sm font-medium text-gray-700">Información Escolar</label>
+                    <div class="mt-1">
+                        {{ alumno_form.info_escolar }}
+                    </div>
+                </div>
+
+                <div class="sm:col-span-6">
+                    <label class="block text-sm font-medium text-gray-700">Salud / Alergias</label>
+                    <div class="mt-1">
+                        {{ alumno_form.info_salud }}
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Sección Representante -->
+        <div class="pt-8">
+            <div>
+                <h3 class="text-lg leading-6 font-medium text-gray-900">Datos del Representante</h3>
+                <p class="mt-1 text-sm text-gray-500">¿Quién es el responsable legal del alumno?</p>
+            </div>
+            <div class="mt-6 grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
+
+                <div class="sm:col-span-3">
+                    <label class="block text-sm font-medium text-gray-700">Nombre</label>
+                    <div class="mt-1">
+                        {{ representante_form.nombre }}
+                    </div>
+                </div>
+
+                <div class="sm:col-span-3">
+                    <label class="block text-sm font-medium text-gray-700">Apellido</label>
+                    <div class="mt-1">
+                        {{ representante_form.apellido }}
+                    </div>
+                </div>
+
+                <div class="sm:col-span-3">
+                    <label class="block text-sm font-medium text-gray-700">Teléfono</label>
+                    <div class="mt-1">
+                        {{ representante_form.telefono }}
+                    </div>
+                </div>
+
+                <div class="sm:col-span-3">
+                    <label class="block text-sm font-medium text-gray-700">Email (Opcional)</label>
+                    <div class="mt-1">
+                        {{ representante_form.email }}
+                    </div>
+                </div>
+
+                <div class="sm:col-span-6">
+                    <label class="block text-sm font-medium text-gray-700">Ocupación</label>
+                    <div class="mt-1">
+                        {{ representante_form.ocupacion }}
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="pt-5">
+            <div class="flex justify-end">
+                <button type="submit"
+                    class="ml-3 inline-flex justify-center py-2 px-10 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all transform hover:scale-105">
+                    {% if editing %}Guardar Cambios{% else %}Guardar Registro{% endif %}
+                </button>
+            </div>
+        </div>
+    </form>
+</div>
+{% endblock %}

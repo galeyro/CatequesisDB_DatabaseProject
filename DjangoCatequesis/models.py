@@ -206,7 +206,12 @@ class Representante(models.Model):
         return f"{self.nombre} {self.apellido}"
 
 class RepresentanteAlumno(models.Model):
-    representante_id_representante = models.ForeignKey(Representante, on_delete=models.CASCADE, db_column='Representante_id_representante')
+    representante_id_representante = models.ForeignKey(
+        Representante, 
+        on_delete=models.CASCADE, 
+        db_column='Representante_id_representante',
+        primary_key=True
+    )
     alumno_id_alumno = models.ForeignKey(Alumno, on_delete=models.CASCADE, db_column='Alumno_id_alumno')
 
     class Meta:
